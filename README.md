@@ -2,9 +2,9 @@
 
 A simple, terminal-based sorting algorithm visualizer
 
-### Screenshots:
+### Demo:
 
-TODO
+![demo](https://github.com/Cubified/ttysort/blob/master/demo.gif)
 
 ## Compilation
 
