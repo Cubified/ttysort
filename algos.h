@@ -270,7 +270,7 @@ void countingsort(elem *a, int n, func disp){
 
 void gravitysort(elem *a, int n, func disp){
   int i, j, max, sum;
-  unsigned char *beads;
+  elem *beads;
   
   for(i=1,max=a[0].val;i<n;i++){
     if(a[i].val > max){
@@ -278,11 +278,11 @@ void gravitysort(elem *a, int n, func disp){
     }
   }
 
-  beads = calloc(1, max*n);
+  countingsort_zero(&beads, max*n);
 
   for(i=0;i<n;i++){
     for(j=0;j<a[i].val;j++){
-      beads[i*max+j] = 1;
+      beads[i*max+j].val = 1;
     }
     disp(a, n, i, -1, 0);
     usleep(RUN_SPEED);
@@ -290,18 +290,22 @@ void gravitysort(elem *a, int n, func disp){
 
   for(j=0;j<max;j++){
     for(sum=i=0;i<n;i++){
-      sum += beads[i*max+j];
-      beads[i*max+j] = 0;
+      sum += beads[i*max+j].val;
+      beads[i*max+j].val = 0;
     }
     for(i=n-sum;i<n;i++){
-      beads[i*max+j] = 1;
+      beads[i*max+j].val = 1;
     }
     disp(a, n, i, -1, 0);
     usleep(RUN_SPEED);
   }
 
   for(i=0;i<n;i++){
-    for(j=0;j<max&&beads[i*max+j]>0;j++){}
+    for(j=0;j<max&&beads[i*max+j].val>0;j++){
+      a[i].val = j;
+      disp(a, n, i, -1, 0);
+      usleep(RUN_SPEED / 2);
+    }
     a[i].val = j;
     disp(a, n, i, -1, 0);
     usleep(RUN_SPEED);

@@ -8,7 +8,6 @@
 #define LENGTH(x) (sizeof(x)/sizeof(x[0]))
 #define FOREACH(arr, start) int i;for(i=start;i<LENGTH(arr);i++)
 
-#define ARR_LEN 20
 #define ARR_MAX 10
 
 #define BASE_X ((tb_width() - ARR_MAX) / 2)
@@ -191,14 +190,14 @@ void display_arr(elem *arr, int n, int p1, int p2, int y_off){
   tb_present();
 }
 
-void draw_rect(int padding, int color){
+void draw_rect(int padding, int color, int base_y, int h){
   int halfpadding = (padding / 2),
       x, y;
 
-  for(y=BASE_Y-halfpadding;
-      y<BASE_Y+ARR_LEN+halfpadding;
+  for(y=base_y-halfpadding;
+      y<base_y+h+halfpadding;
       y++){
-    if(y == BASE_Y-halfpadding || y == BASE_Y+ARR_LEN+halfpadding-1){
+    if(y == base_y-halfpadding || y == base_y+h+halfpadding-1){
       for(x=BASE_X-padding;
           x<BASE_X+ARR_MAX+padding;
           x++){
@@ -251,24 +250,29 @@ void set_run_speed(char *s){
 }
 
 void set_dataset_size(char *s){
-  /*char *end;
+  char *end;
   ARR_LEN = strtol(s, &end, 10);
   if(*end){
     ARR_LEN = 20;
-  }*/
+  }
+
+  free(arr);
+  free(arr_sorted);
+
+  init_arr();
 }
 
 void run(func algo, char *name_pretty){
   if(algo != shutdown){
     tb_clear();
 
-    draw_rect(8, TB_RED);
+    draw_rect(8, TB_RED, BASE_Y, ARR_LEN);
 
     tb_printf(center(name_pretty), BASE_Y - 2, TB_WHITE|TB_BOLD, TB_DEFAULT, name_pretty);
 
     algo(arr, ARR_LEN, display_arr);
 
-    draw_rect(8, TB_GREEN);
+    draw_rect(8, TB_GREEN, BASE_Y, ARR_LEN);
 
     tb_printf(center(MSG), BASE_Y + ARR_LEN + 1, TB_WHITE, TB_DEFAULT, MSG);
     tb_present();

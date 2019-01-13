@@ -5,6 +5,7 @@
 #define VER "0.1.0"
 
 int RUN_SPEED = 100000;
+int ARR_LEN = 20;
 
 typedef void (*func)();
 
@@ -30,7 +31,7 @@ func options[] = {
   gnomesort,
   combsort,
   countingsort,
-/*  gravitysort, */
+  gravitysort,
   bogosort,
   NULL,
   shutdown
@@ -45,7 +46,7 @@ char *option_names_pretty[] = {
   "Gnome Sort",
   "Comb Sort",
   "Counting Sort",
-/*  "Gravity Sort", */
+  "Gravity Sort",
   "Bogosort",
   "--------",
   "Quit"

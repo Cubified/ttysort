@@ -7,6 +7,9 @@
 #ifndef __MENU_H
 #define __MENU_H
 
+#define MENU_X ((tb_width() - 10) / 2)
+#define MENU_Y ((tb_height() - 20) / 2)
+
 #define VALID_CHOICE(c) (m->items[c].action != NULL)
 
 typedef struct menu_item {
@@ -45,9 +48,9 @@ typedef struct menu {
 /*
  * Menu "library" (almost
  * entirely standalone,
- * BASE_X/Y as well as
- * len() are defined
- * in ttysort.h
+ * len() and others
+ * are defined in
+ * ttysort.h
  */
 
 void menu_disp(menu *m){
@@ -55,15 +58,15 @@ void menu_disp(menu *m){
   int i, menu_height, c,
       pos_x, pos_y;
 
-  draw_rect(8, TB_BLUE);
+  draw_rect(8, TB_BLUE, MENU_Y, 20);
   
-  tb_printf(center(m->title), BASE_Y - 2, TB_WHITE|TB_BOLD, TB_DEFAULT, m->title);
+  tb_printf(center(m->title), MENU_Y - 2, TB_WHITE|TB_BOLD, TB_DEFAULT, m->title);
 
   for(i=0;i<m->items_count;i++){
     if(m->choice == i){
-      tb_printf(center(m->items[i].text), BASE_Y+i, TB_BLACK, TB_WHITE, m->items[i].text);
+      tb_printf(center(m->items[i].text), MENU_Y+i, TB_BLACK, TB_WHITE, m->items[i].text);
     } else {
-      tb_printf(center(m->items[i].text), BASE_Y+i, TB_WHITE, TB_DEFAULT, m->items[i].text);
+      tb_printf(center(m->items[i].text), MENU_Y+i, TB_WHITE, TB_DEFAULT, m->items[i].text);
     }
   }
 
@@ -73,9 +76,9 @@ void menu_disp(menu *m){
     s = malloc(len(m->toggles[i].text) + 5);
     sprintf(s, "%s (%c)", m->toggles[i].text, m->toggles[i].bind);
     if(m->toggles[i].state){
-      tb_printf(center(s), BASE_Y+menu_height+i, TB_BLACK, TB_WHITE, s);
+      tb_printf(center(s), MENU_Y+menu_height+i, TB_BLACK, TB_WHITE, s);
     } else {
-      tb_printf(center(s), BASE_Y+menu_height+i, TB_WHITE, TB_DEFAULT, s);
+      tb_printf(center(s), MENU_Y+menu_height+i, TB_WHITE, TB_DEFAULT, s);
     }
     free(s);
   }
@@ -84,7 +87,7 @@ void menu_disp(menu *m){
 
   for(i=0;i<m->inputs_count;i++){
     pos_x = ((tb_width() - m->inputs[i].max_len) / 2);
-    pos_y = BASE_Y+menu_height+(i*3)+1;
+    pos_y = MENU_Y+menu_height+(i*3)+1;
 
     for(c=0;c<=m->inputs[i].max_len;c++){
       tb_putchar(pos_x+c, pos_y, TB_BLACK, TB_WHITE, ' ');
@@ -238,7 +241,7 @@ void menu_main(menu *m){
 
   menu_add_input("Run Speed", stralloc("10"), 'r', 3, set_run_speed, m);
 
-  /* menu_add_input("Dataset Size", stralloc("20"), 'd', 2, set_dataset_size, m); */
+  menu_add_input("Dataset Size", stralloc("20"), 'd', 2, set_dataset_size, m);
 
   menu_disp(m);
   
