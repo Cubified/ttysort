@@ -14,6 +14,8 @@ void swap(elem *a, int n1, int n2){
   a[n2].state = state_swapped;
 }
 
+/***/
+
 void bubblesort(elem *a, int n, func disp){
   int s = 1,
       j = 0,
@@ -31,6 +33,8 @@ void bubblesort(elem *a, int n, func disp){
     }
   }
 }
+
+/***/
 
 void quicksort(elem *a, int left, int right, int len, func disp){
   int i = left,
@@ -51,7 +55,7 @@ void quicksort(elem *a, int left, int right, int len, func disp){
       i++;
       j--;
       disp(a, len, pivot.val, j, 0);
-      usleep(RUN_SPEED*2);
+      usleep(RUN_SPEED);
     }
   }
 
@@ -66,6 +70,8 @@ void quicksort(elem *a, int left, int right, int len, func disp){
 void quicksort_wrapper(elem *a, int n, func disp){
   quicksort(a, 0, n - 1, n, disp);
 }
+
+/***/
 
 void selectionsort(elem *a, int n, func disp){
   int i, j, min, tmp;
@@ -87,6 +93,8 @@ void selectionsort(elem *a, int n, func disp){
   }
 }
 
+/***/
+
 void shellsort(elem *a, int n, func disp){
   int h, i, j, t;
   for(h=n;h/=2;){
@@ -103,6 +111,8 @@ void shellsort(elem *a, int n, func disp){
     }
   }
 }
+
+/***/
 
 int bogo_is_sorted(elem *a, int n){
   while(--n > 1){
@@ -134,6 +144,8 @@ void bogosort(elem *a, int n, func disp){
   }
 }
 
+/***/
+
 void cocktailshakersort(elem *a, int n, func disp){
   int s = 0;
   int i;
@@ -161,6 +173,8 @@ void cocktailshakersort(elem *a, int n, func disp){
   } while(s);
 }
 
+/***/
+
 void gnomesort(elem *a, int n, func disp){
   int i = 1,
       j = 2,
@@ -178,6 +192,8 @@ void gnomesort(elem *a, int n, func disp){
     i = j++;
   }
 }
+
+/***/
 
 void combsort(elem *a, int n, func disp){
   int gap = n,
@@ -202,6 +218,99 @@ void combsort(elem *a, int n, func disp){
       usleep(RUN_SPEED);
     }
   }
+}
+
+/***/
+
+void countingsort_zero(elem **arr, int n){
+  int i;
+  *arr = malloc(n * sizeof(elem));
+
+  for(i=0;i<n;i++){
+    (*arr)[i].val = 0;
+  }
+}
+
+void countingsort(elem *a, int n, func disp){
+  int i, j,
+      c = 0,
+      max = 0;
+  elem *count,
+       *out;
+
+  countingsort_zero(&count, n);
+  copy_arr(&a, &out, n);
+
+  for(i=0;i<n;i++){
+    count[a[i].val].val = count[a[i].val].val+1;
+    if(a[i].val > max){
+      max = a[i].val;
+    }
+    disp(a, n, i, -1, 0);
+    usleep(RUN_SPEED);
+  }
+
+  for(i=0;i<=max;i++){
+    for(j=1;j<=count[i].val;j++){
+      out[c].val = i;
+      c++;
+      disp(out, n, c, -1, 0);
+      usleep(RUN_SPEED);
+    }
+  }
+
+  disp(out, n, -1, -1, 0);
+  usleep(RUN_SPEED);
+
+  free(count);
+  free(out);
+}
+
+/***/
+
+void gravitysort(elem *a, int n, func disp){
+  int i, j, max, sum;
+  unsigned char *beads;
+  
+  for(i=1,max=a[0].val;i<n;i++){
+    if(a[i].val > max){
+      max = a[i].val;
+    }
+  }
+
+  beads = calloc(1, max*n);
+
+  for(i=0;i<n;i++){
+    for(j=0;j<a[i].val;j++){
+      beads[i*max+j] = 1;
+    }
+    disp(a, n, i, -1, 0);
+    usleep(RUN_SPEED);
+  }
+
+  for(j=0;j<max;j++){
+    for(sum=i=0;i<n;i++){
+      sum += beads[i*max+j];
+      beads[i*max+j] = 0;
+    }
+    for(i=n-sum;i<n;i++){
+      beads[i*max+j] = 1;
+    }
+    disp(a, n, i, -1, 0);
+    usleep(RUN_SPEED);
+  }
+
+  for(i=0;i<n;i++){
+    for(j=0;j<max&&beads[i*max+j]>0;j++){}
+    a[i].val = j;
+    disp(a, n, i, -1, 0);
+    usleep(RUN_SPEED);
+  }
+
+  disp(a, n, -1, -1, 0);
+  usleep(RUN_SPEED);
+
+  free(beads);
 }
 
 #endif

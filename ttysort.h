@@ -45,6 +45,21 @@ int len(char *s){
   return o;
 }
 
+void append(char *s, char c){
+  s = realloc(s, len(s) + 2);
+  sprintf(s, "%s%c", s, c);
+}
+
+char *stralloc(char *s){
+  char *o = malloc(len(s) + 1);
+  sprintf(o, "%s", s);
+  return o;
+}
+
+void delchar(char *s){
+  s[len(s)-1] = '\0';
+}
+
 /*
  * Array utilities
  */
@@ -62,6 +77,11 @@ void generate_arr(elem **out, int n, int m){
   }
 }
 
+/*
+ * Out and in are in the wrong order, not
+ * fixing because I'm just amazed at the
+ * fact I never caught this
+ */
 void copy_arr(elem **out, elem **in, int n){
   int i;
 
@@ -222,6 +242,22 @@ void set_gradient(int g){
   gradient = g;
 }
 
+void set_run_speed(char *s){
+  char *end;
+  RUN_SPEED = ((float)(10/(float)strtol(s, &end, 10)) * 100000);
+  if(*end){
+    RUN_SPEED = 100000;
+  }
+}
+
+void set_dataset_size(char *s){
+  /*char *end;
+  ARR_LEN = strtol(s, &end, 10);
+  if(*end){
+    ARR_LEN = 20;
+  }*/
+}
+
 void run(func algo, char *name_pretty){
   if(algo != shutdown){
     tb_clear();
@@ -244,7 +280,7 @@ void run(func algo, char *name_pretty){
     wait_for_key();
 
     tb_clear();
-  } else{
+  } else {
     running = 0;
     shutdown();
   }
